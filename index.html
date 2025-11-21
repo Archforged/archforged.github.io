@@ -13,17 +13,37 @@
         <h1></h1>
         <p>A seamless, highly-tuned desktop built on Hyprland, driven by the <span class="accent">Emotive Engine</span>.</p>
         
-        <img src="img/showcase.gif" alt="Archforged Desktop Demo">
         
-        <a href="#installation" class="cta-button">INSTALL NOW</a>
+   <a href="https://github.com/Archforged/archforged-public/releases/latest" 
+   class="cta-button" 
+   target="_blank">
+    INSTALL NOW
+</a>
     </header>
-
-    <section id="installation">
-        <h2>🚀 Installation (The One-Step Setup)</h2>
-        <p>Using Github...</p>
+<section id="installation">
+    <h2 style="color:var(--emotive-accent); border-bottom:1px solid #444;">🚀 Installation (Get Started)</h2>
+    
+    <div style="max-width: 800px; margin: 0 auto; padding: 20px; background-color: var(--surface-color); border-radius: 8px;">
         
-       
-    </section>
+        <h3 style="color:#eee;">1. Download and Write the ISO</h3>
+        <p>The installation image is hosted on our <span class="accent">archforged-public</span> repository. Download the latest ISO file and write it to a USB drive using Rufus, Etcher, or your preferred tool.</p>
+        
+        <a href="https://github.com/Archforged/archforged-public/releases/latest" 
+           class="cta-button" 
+           style="background-color:#E53935; color:#1a1a1a; margin-top:10px;" 
+           target="_blank">
+            GO TO DOWNLOADS PAGE
+        </a>
+
+        <h3 style="color:#eee; margin-top:30px;">2. Post-Install Setup (Using forged)</h3>
+        <p>Once Archforged is installed and you log in, all core components are ready. Use the <span class="accent">forged</span> utility to keep your system updated and install new software quickly:</p>
+        
+        <div class="terminal-output">
+            <code>$ forged -Syu</code><br>
+            <span style="color:#aaa;"># Full system update and upgrade, including AUR.</span>
+        </div>
+    </div>
+</section>
 
     <section id="cli-reference">
         <h2>⚙️ The <span class="accent">forged</span> package manager</h2>
