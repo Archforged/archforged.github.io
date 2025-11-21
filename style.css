@@ -1,0 +1,173 @@
+/* ==========================================================
+   ARCHFORGED EMOTIVE THEME - style.css
+   Designed for archforged.github.io (using index.html)
+   ========================================================== */
+
+/* 1. ROOT VARIABLES (Easy Customization) */
+:root {
+    /* Primary color for text, links, and buttons (Red Accent) */
+    --emotive-accent: #E53935; /* Bright Red */
+    /* Darkest background for the main body */
+    --background-color: #1a1a1a; 
+    /* Slightly lighter background for cards/terminal/headers */
+    --surface-color: #2b2b2b; 
+    /* Font used for a clean, technical look */
+    --font-family: 'Consolas', monospace;
+}
+
+/* 2. GLOBAL RESET & BASE STYLING */
+body {
+    background-color: var(--background-color);
+    color: #f0f0f0; /* Off-white text */
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
+
+/* Ensure links inherit color unless specified */
+a {
+    color: var(--emotive-accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #FFCDD2; /* Lighter red on hover */
+    text-decoration: underline;
+}
+
+/* 3. HEADERS & TYPOGRAPHY */
+h1, h2, h3 {
+    color: var(--emotive-accent);
+    line-height: 1.2;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 2.8em;
+    border-bottom: 2px solid var(--emotive-accent);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-top: 40px;
+}
+
+/* 4. LAYOUT CONTAINERS */
+header, section, footer {
+    padding: 20px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 5. HERO SECTION SPECIFICS */
+#hero-showcase {
+    background-color: var(--surface-color);
+    text-align: center;
+    padding: 80px 5%;
+    border-bottom: 4px solid var(--emotive-accent);
+}
+
+#hero-showcase p {
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+#hero-showcase img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #444;
+    box-shadow: 0 0 15px rgba(229, 57, 53, 0.4); /* Red glow effect */
+    margin: 30px 0;
+}
+
+/* 6. CTA BUTTON STYLING */
+.cta-button {
+    background-color: var(--emotive-accent);
+    color: var(--surface-color) !important; /* Force dark text on button */
+    display: inline-block;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.cta-button:hover {
+    background-color: #EF5350; /* Slightly lighter red */
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* 7. TERMINAL & CODE STYLING (The forged Aesthetic) */
+/* The container for the code block */
+.terminal-output {
+    background-color: #000;
+    border: 1px solid var(--emotive-accent);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 6px;
+    overflow-x: auto; /* Handles long lines of code */
+}
+
+/* Style the text inside the code block */
+.terminal-output code {
+    font-family: var(--font-family);
+    font-size: 0.9em;
+    white-space: pre;
+    color: #f0f0f0; /* Default text color */
+}
+
+/* Highlight the prompt or success message */
+.terminal-output .prompt {
+    color: #4CAF50; /* Green for success/prompt */
+}
+
+.terminal-output .error {
+    color: var(--emotive-accent); /* Red for errors */
+}
+
+/* 8. TABLE STYLING */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.95em;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background-color: var(--surface-color);
+    color: var(--emotive-accent);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #333;
+}
+
+/* 9. UTILITIES & FOOTER */
+.accent {
+    color: var(--emotive-accent);
+}
+
+footer {
+    text-align: center;
+    padding: 20px 5%;
+    border-top: 1px solid #333;
+    color: #666;
+    font-size: 0.9em;
+}
