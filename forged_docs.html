@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archforged - forged CLI Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 1. ROOT VARIABLES (Dark Gray & Red Accent) */
+        :root {
+            --emotive-accent: #E53935; /* Bright Red */
+            --background-color: #1a1a1a; 
+            --surface-color: #2b2b2b; 
+            --text-color: #f0f0f0;
+            --code-background: #000000;
+            --font-family: 'Roboto Mono', monospace;
+        }
+
+        /* GLOBAL RESET & BASE STYLING */
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 2. HEADERS & ACCENTS */
+        h1, h2, h3 {
+            color: var(--emotive-accent);
+            line-height: 1.2;
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            border-bottom: 3px solid var(--emotive-accent);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+
+        .accent {
+            color: var(--emotive-accent);
+        }
+
+        /* 3. TERMINAL CODE BLOCK STYLING */
+        pre {
+            background-color: var(--code-background);
+            border: 1px solid var(--emotive-accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        /* Simulate prompt and output colors */
+        code {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        /* Simple coloring for commands/output for flair */
+        pre code {
+            display: block;
+            color: #77EE77; /* Default terminal text */
+        }
+        
+        pre code::before {
+            content: '$ ';
+            color: var(--emotive-accent);
+        }
+
+        /* 4. TABLE STYLING */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: var(--surface-color);
+            color: var(--emotive-accent);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #333;
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: 0;
+            height: 1px;
+            background: #333;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <h1><span class="accent">forged</span> CLI Documentation</h1>
+        
+        <p style="text-align: center;">
+            **forged** is the custom package manager and build helper at the core of Archforged. 
+            Built in Go, it provides a fast, unified interface for installing software from official Arch repositories, 
+            the Arch User Repository (AUR), and directly from Git source code.
+        </p>
+
+        <hr>
+
+        <!-- USAGE SYNTAX -->
+        <h2>Usage Syntax</h2>
+        <p>The <code>forged</code> utility is executed using a single, primary flag followed by the action or package name.</p>
+        <pre><code style="color:var(--text-color);">$ forged &lt;action&gt; [arguments]</code></pre>
+
+        <!-- 1. PACKAGE INSTALLATION -->
+        <h2>1. Package Installation (<span class="accent">-B</span> or <span class="accent">--bin</span>)</h2>
+        <p>The <span class="accent">-B</span> flag is your primary command for installing new software. It abstracts the standard Arch Linux package hierarchy: checking official repositories first before falling back to the AUR.</p>
+
+        <table>
+            <thead>
+                <tr><th>Flag</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>-B</code>, <code>--bin</code></td><td>Install package from repositories (Arch, then AUR)</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Examples</h3>
+        <table>
+            <thead>
+                <tr><th>Command</th><th>Action</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>forged -B hyprland</code></td><td><strong>Official Repo</strong></td><td>Attempts <code>pacman -S hyprland</code>.</td></tr>
+                <tr><td><code>forged -B visual-studio-code-bin</code></td><td><strong>AUR Install</strong></td><td>Tries <code><b>pacman</b></code> first, then falls back to <code><b>yay</b></code> or <code>paru -S</code>.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Execution Flow</h3>
+        <p>The <code>-B</code> command is highly resilient, automatically installing an AUR helper (like <code><b>yay</b></code>) if needed.</p>
+        <ol>
+            <li>Check <strong>Arch Repositories</strong> (<code><b>pacman</b></code>).</li>
+            <li>If found, install using <code><b>pacman</b></code>.</li>
+            <li>If not found, check for <strong>AUR Helper</strong> (<code><b>yay</b></code> or <code><b>paru</b></code>).</li>
+            <li>If helper is missing, <strong>install <code>yay</code></strong>.</li>
+            <li>Install using the detected helper. </li>
+            <li><em>Crucially:</em> Any failure at any step will stop the process and exit with a clear error message.</li>
+        </ol>
+
+        <hr>
+
+        <!-- 2. SOURCE CODE BUILDING -->
+        <h2>2. Source Code Building (<span class="accent">-G</span> or <span class="accent">--git</span>)</h2>
+        <p>The <span class="accent">-G</span> flag is designed for developers who want to build and install software directly from a Git repository.</p>
+
+        <table>
+            <thead>
+                <tr><th>Flag</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>-G</code>, <code>--git</code></td><td>Clone and auto-build a project directly from a Git URL.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Examples</h3>
+        <table>
+            <thead>
+                <tr><th>Command</th><th>Action</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>forged -G https://github.com/hyprwm/hyprpaper</code></td><td><strong>CMake Build</strong></td><td>Clones the repo, detects <code>CMakeLists.txt</code>, and runs the standard <code>cmake/make/install</code> sequence.</td></tr>
+                <tr><td><code>forged -G https://github.com/user/my-go-tool.git</code></td><td><strong>Go Build</strong></td><td>Detects <code>go.mod</code>, runs <code>go build .</code>, and installs the resulting binary to <code>/usr/local/bin</code>.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Automatic Build Detection</h3>
+        <p>The <code>forged</code> utility automatically scans the cloned repository for standard build files:</p>
+        <table>
+            <thead>
+                <tr><th>Build System Detected</th><th>Execution Chain</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>PKGBUILD</code></td><td><code>makepkg -si --noconfirm</code></td></tr>
+                <tr><td><code>meson.build</code></td><td><code>meson setup build</code> → <code>ninja -C build</code> → <code>ninja install</code></td></tr>
+                <tr><td><code>CMakeLists.txt</code></td><td><code>cmake -Bbuild</code> → <code>make -Cbuild</code> → <code>make install</code></td></tr>
+                <tr><td><code>go.mod</code></td><td><code>go build .</code> → <code>sudo install</code></td></tr>
+                <tr><td><code>package.json</code></td><td><code>npm install</code> (plus <code>npm run build</code> if webpack/vite is detected)</td></tr>
+                <tr><td><code>configure</code> / <code>Makefile.am</code></td><td>Standard Autotools sequence (<code>./configure</code> → <code>make</code> → <code>make install</code>)</td></tr>
+                <tr><td><strong>None Detected</strong></td><td>Drops the user into a <code>bash</code> shell within the directory for manual build.</td></tr>
+            </tbody>
+        </table>
+        
+        <hr>
+
+        <!-- 3. SYSTEM MAINTENANCE -->
+        <h2>3. System Maintenance (<span class="accent">-Syu</span> or <span class="accent">--sync-upgrade</span>)</h2>
+        <p>This command provides the comprehensive system update necessary for any Arch-based system.</p>
+
+        <table>
+            <thead>
+                <tr><th>Flag</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>-Syu</code>, <code>--sync-upgrade</code></td><td>Perform a full system and AUR upgrade.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Execution Flow</h3>
+        <p>The output below simulates a full upgrade sequence:</p>
+        <pre><code>
+$ forged -Syu
+[upgrade] Upgrading system + AUR...
+
+# 1. Official Repositories
+Wraps <b>pacman</b>.
+
+# 2. AUR
+Wraps <b>yay</b>or <b> paru</b>.
+
+[success] System fully upgraded!
+        </code></pre>
+        
+        <hr>
+
+        <!-- 4. VERSION CHECK -->
+        <h2>4. Version Check (<span class="accent">-v</span> or <span class="accent">--version</span>)</h2>
+        <p>Displays the current version of the <code>forged</code> utility.</p>
+        
+        <table>
+            <thead>
+                <tr><th>Flag</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>-v</code>, <code>--version</code></td><td>Display the version number.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Example</h3>
+        <pre><code style="color:var(--text-color);">
+$ forged -v
+forged 2.1.0 — the Archforged package manager
+        </code></pre>
+
+    </div>
+</body>
+</html>
