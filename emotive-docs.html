@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchForged - Emotive-Engine Project</title>
+    <!-- Link to your provided stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 
+      This <section> tag will be centered and padded 
+      by the 'section' rule in style.css 
+    -->
+    <section>
+        <!-- The <h1> will be styled with the red accent and border -->
+        <h1>Emotive-Engine</h1>
+        <p>
+            Transform your static desktop into a fully immersive, audio-reactive experience. The <span class="accent">Emotive-Engine (EE)</span> is a powerful Python service that connects Hyprland's aesthetics directly to your media, creating a dynamic light show that responds to your music, videos, and even your periods of idle.
+        </p>
+        <p>
+            It goes beyond simple color matching. EE analyzes your media to create vibrant, multi-color palettes and pulses in real-time with your audio, synchronizing your borders, status bar, and even your animated wallpaper.
+        </section>
+
+        <!-- 
+          This is a separate section to add a bit of vertical spacing.
+          You can merge this with the section above if you prefer.
+        -->
+        <section>
+            <!-- The <h2> will have the red text and lighter border bottom -->
+            <h2>Core Features</h2>
+            <ul>
+                <li>
+                    <strong>Dynamic Music Palettes:</strong> When you play music (via any MPRIS player), EE analyzes the album art, extracts a 15-color vibrant palette, and smoothly cycles your borders through them.
+                </li>
+                <li>
+                    <strong>Live Video Sampling:</strong> Watching a music video on YouTube or a file in <code>mpv</code>? EE automatically detects it, samples the video frames in real-time, and matches the border to the single most dominant and vibrant color on screen.
+                </li>
+                <li>
+                    <strong>Real-time Beat Detection:</strong> The borders and synced elements don't just change color—they <strong>pulse</strong> brighter with every kick drum and bass hit in your music or video, powered by <code>aubio</code> and PipeWire.
+                </li>
+                <li>
+                    <strong>Intelligent Idle Mode:</strong> When all media is paused, the borders gracefully fade to match your desktop wallpaper.
+                </li>
+                <li>
+                    <strong>Ambient "Breathe" Pulse:</strong> While idle, the borders aren't dead. They will "breathe" with a subtle, brightening pulse every few seconds, making your desktop feel alive.
+                </li>
+                <li>
+                    <strong>Deep Desktop Integration:</strong> EE doesn't just control borders. It syncs its color data with:
+                    <!-- A nested list for the sub-features -->
+                    <ul style="margin-top: 10px;">
+                        <li><strong>HyprPanel:</strong> Updates the panel's accent color in its <code>style.css</code> file.</li>
+                        <li><strong>linux-wallpaperengine:</strong> Sends the current color directly to your animated wallpaper's shader properties.</li>
+                        <li><strong>Hyprland Plugins:</strong> Tints your static wallpaper using the <code>plugin:wallpaper:pulse</code> keyword.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Smart Player Prioritization:</strong> You have full control. Prioritize <code>YoutubeMusic</code> over <code>spotify-player</code>, or web players over local ones.
+                </li>
+            </ul>
+
+            <h2>How It Works: The Logic</h2>
+            <p>EE runs as a background <code>systemd</code> service, constantly monitoring your desktop's state.</p>
+            <ol>
+                <li>
+                    <strong>Check for Music (MPRIS):</strong> Is <code>YoutubeMusic</code> or <code>spotify-player</code> active?
+                    <br><strong>YES:</strong> Grab the album art, generate the 15-color palette, and begin the 4-second smooth-fade cycle.
+                </li>
+                <li>
+                    <strong>Check for Video (Window Sampling):</strong> Is a window with "youtube," "firefox," or "mpv" open (and no music playing)?
+                    <br><strong>YES:</strong> Use <code>grim</code> and <code>ffmpeg</code> to sample the window, find the dominant vibrant color, and set the border to that static color.
+                </li>
+                <li>
+                    <strong>Check for Audio (Beat Detection):</strong> In either of the above states, is audio playing?
+                    <br><strong>YES:</strong> Listen to the audio stream. On every beat, send a command to make the current color flash brighter.
+                </li>
+                <li>
+                    <strong>Idle State:</strong> Is nothing playing?
+                    <br><strong>YES:</strong> Match the border color to the wallpaper. Every 6-9 seconds, trigger the "breathe" pulse.
+                </li>
+            </ol>
+
+            <h2>Quick Setup</h2>
+            <p>While the full script is too large to post here, you can build your own by following these setup steps.</p>
+
+            <!-- Using <h3> for sub-sections, as <h2> is for main topics -->
+            <h3>1. Dependencies</h3>
+            <p>You will need a number of packages to run the full script.</p>
+            
+            <!-- 
+              Using the .terminal-output class for code blocks.
+              Using .prompt for the '$' character as defined in style.css
+            -->
+            <div class="terminal-output"><code><span class="prompt"># Install core dependencies from your package manager</span>
+sudo pacman -S python python-pip python-numpy \
+               playerctl grim ffmpeg hyprctl
+
+<span class="prompt"># Install required Python libraries</span>
+pip install --user sounddevice aubio pillow requests</code></div>
+
+            <h3>2. Hyprland Configuration</h3>
+            <p>Ensure your <code>hyprland.conf</code> is set up to <em>receive</em> color commands from the script. The script controls the <code>general:col</code> keywords.</p>
+            <div class="terminal-output"><code><span class="prompt"># ~/.config/hypr/hyprland.conf</span>
+# ... other settings ...
+
+general {
+    # Set your border and shadow colors to a temporary value.
+    # Emotive-Engine will overwrite these instantly.
+    col.active_border = rgba(777777cc)
+    col.inactive_border = rgba(444444cc)
+    col.shadow = rgba(111111cc)
+}</code></div>
+
+            <h3>3. Systemd Service</h3>
+            <p>To make the script run as a service, create this file:</p>
+            <p><strong>File:</strong> <code>~/.config/systemd/user/emotive-engine.service</code></p>
+            <div class="terminal-output"><code>[Unit]
+Description=Emotive Engine for Hyprland
+After=graphical-session.target
+
+[Service]
+ExecStart=/home/YOUR_USER/bin/emotive-engine.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=hyprland-session.target</code></div>
+
+            <p>Then, enable and start the service:</p>
+            <div class="terminal-output"><code><span class="prompt">systemctl --user daemon-reload</span>
+<span class="prompt">systemctl --user enable --now emotive-engine.service</span></code></div>
+        
+        </section>
+
+    <!-- 
+      The <footer> tag will be centered and styled 
+      by the 'footer' rule in style.css 
+    -->
+    <footer>
+        <p>&copy; 2025 ArchForged. This project is a user-submitted concept.</p>
+    </footer>
+
+</body>
+</html>
